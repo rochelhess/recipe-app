@@ -1,9 +1,18 @@
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
 import RecipeForm from "@/components/RecipeForm";
 
 export default function AddRecipe() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [loading, user, router]);
 
   async function handleAdd(recipe) {
     const response = await fetch("/api/recipes", {
@@ -18,6 +27,10 @@ export default function AddRecipe() {
     }
 
     router.push(`/recipes/${data.id}`);
+  }
+
+  if (loading || !user) {
+    return <p>Loading...</p>;
   }
 
   return (

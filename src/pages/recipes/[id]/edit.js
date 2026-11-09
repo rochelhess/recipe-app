@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
 import RecipeForm from "@/components/RecipeForm";
 
 export default function EditRecipe() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const { id } = router.query;
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export default function EditRecipe() {
     router.push(`/recipes/${id}`);
   }
 
-  if (loading) {
+  if (loading || authLoading) {
     return <p>Loading recipe...</p>;
   }
 
@@ -49,6 +51,15 @@ export default function EditRecipe() {
     return (
       <div className="recipe-details">
         <h1>Recipe not found</h1>
+        <Link href="/">← Back to Recipes</Link>
+      </div>
+    );
+  }
+
+  if (!user || recipe.owner !== user.id) {
+    return (
+      <div className="recipe-details">
+        <h1>You can only edit your own recipes</h1>
         <Link href="/">← Back to Recipes</Link>
       </div>
     );

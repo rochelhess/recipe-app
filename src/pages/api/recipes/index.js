@@ -1,5 +1,7 @@
 import connectDB from "@/lib/mongodb";
 import Recipe from "@/models/Recipe";
+import { getUserIdFromRequest } from "@/lib/auth";
+import { pickFields } from "@/lib/recipeFields";
 
 export default async function handler(req, res) {
   try {
@@ -11,7 +13,15 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
-      const recipe = await Recipe.create(req.body);
+      const userId = getUserIdFromRequest(req);
+      if (!userId) {
+        return res.status(401).json({ error: "You must be logged in" });
+      }
+
+      const recipe = await Recipe.create({
+        ...pickFields(req.body),
+        owner: userId,
+      });
       return res.status(201).json(recipe);
     }
 

@@ -10,6 +10,7 @@ const RecipeSchema = new mongoose.Schema(
     servings: { type: Number, required: true, min: 1 },
     ingredients: { type: [String], default: [] },
     instructions: { type: [String], default: [] },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   },
   { timestamps: true },
 );

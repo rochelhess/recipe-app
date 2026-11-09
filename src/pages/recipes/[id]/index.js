@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
 
 export default function RecipeDetails() {
   const router = useRouter();
+  const { user } = useAuth();
   const { id } = router.query;
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -52,6 +54,7 @@ export default function RecipeDetails() {
       </div>
     );
   }
+  const isOwner = user && recipe.owner === user.id;
 
   return (
     <div className="recipe-details">
@@ -86,22 +89,24 @@ export default function RecipeDetails() {
         </div>
       </div>
 
-      <div className="recipe-actions">
-        <Link
-          href={`/recipes/${recipe.id}/edit`}
-          className="edit-recipe-button"
-        >
-          Edit Recipe
-        </Link>
+      {isOwner && (
+        <div className="recipe-actions">
+          <Link
+            href={`/recipes/${recipe.id}/edit`}
+            className="edit-recipe-button"
+          >
+            Edit Recipe
+          </Link>
 
-        <button
-          type="button"
-          className="delete-recipe-button"
-          onClick={handleDelete}
-        >
-          Delete Recipe
-        </button>
-      </div>
+          <button
+            type="button"
+            className="delete-recipe-button"
+            onClick={handleDelete}
+          >
+            Delete Recipe
+          </button>
+        </div>
+      )}
 
       <section className="recipe-section">
         <h2>Ingredients</h2>
