@@ -1,6 +1,9 @@
-# Initial Project Ideas
+# Initial Project Ideas:
 
-## Chosen Idea: Recipe App
+1.recipe app
+2.website to sell or buy used objects 3. website to find doctor best suited for your needs
+
+## Final proposal: Recipe App
 
 ### The Problem
 
