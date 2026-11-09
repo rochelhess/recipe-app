@@ -14,4 +14,13 @@ const RecipeSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+RecipeSchema.set("toJSON", {
+  versionKey: false,
+  transform: (doc, ret) => {
+    ret.id = ret._id.toString();
+    delete ret._id;
+    return ret;
+  },
+});
+
 export default mongoose.models.Recipe || mongoose.model("Recipe", RecipeSchema);

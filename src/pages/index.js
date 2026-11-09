@@ -1,9 +1,27 @@
-import { useState } from "react";
-import recipes from "@/data/recipes";
+import { useEffect, useState } from "react";
 import RecipeCard from "@/components/RecipeCard";
 
 export default function Home() {
+  const [recipes, setRecipes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadRecipes() {
+      try {
+        const response = await fetch("/api/recipes");
+        if (!response.ok) throw new Error("Could not load recipes");
+        setRecipes(await response.json());
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadRecipes();
+  }, []);
 
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -22,7 +40,11 @@ export default function Home() {
         />
       </div>
 
-      {filteredRecipes.length === 0 ? (
+      {loading ? (
+        <p>Loading recipes...</p>
+      ) : error ? (
+        <p className="no-results">{error}</p>
+      ) : filteredRecipes.length === 0 ? (
         <p className="no-results">No recipes found.</p>
       ) : (
         <div className="recipe-list">
