@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 function RecipeCard({ id, title, description, image }) {
   return (
@@ -6,7 +6,7 @@ function RecipeCard({ id, title, description, image }) {
       <img className="recipe-image" src={image} alt={title} />
       <h2>{title}</h2>
       <p>{description}</p>
-      <Link to={`/recipes/${id}`}>View Recipe</Link>
+      <Link href={`/recipes/${id}`}>View Recipe</Link>
     </div>
   );
 }
